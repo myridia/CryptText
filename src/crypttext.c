@@ -29,20 +29,32 @@ static Panel *i_panel(App *app)
 {
     Panel *panel = panel_create();
     Layout *layout = layout_create(1, 3);
+    Layout *layout1 = layout_create(3, 1);        
+    Layout *layout2 = layout_create(8, 1);
+
+    
     Label *label = label_create();
     Button *button = button_push();
     TextView *text = textview_create();
-    label_text(label, "HelloT, I'm a labelT");
-    button_text(button, "Click Me!T");
+    textview_editable(text, TRUE);
+    label_text(label, "m1m1");
+    button_text(button, "Open");
     button_OnClick(button, listener(app, i_OnButton, App));
-    layout_label(layout, label, 0, 0);
-    layout_button(layout, button, 0, 1);
-    layout_textview(layout, text, 0, 2);
-    layout_hsize(layout, 0, 250);
-    layout_vsize(layout, 2, 100);
+
+    
+    layout_label(layout1, label, 0, 0);
+    layout_button(layout2, button, 0, 0);
+    
+    layout_hsize(layout, 0, 550);
+    layout_vsize(layout, 2, 200);
     layout_margin(layout, 5);
     layout_vmargin(layout, 0, 5);
     layout_vmargin(layout, 1, 5);
+    
+    layout_layout(layout,layout1,0,0);
+    layout_layout(layout,layout2,1,0);    
+    layout_textview(layout, text, 0, 2);
+    
     panel_layout(panel, layout);
     app->text = text;
     return panel;
@@ -65,8 +77,8 @@ static App *i_create(void)
     Panel *panel = i_panel(app);
     app->window = window_create(ekWINDOW_STD);
     window_panel(app->window, panel);
-    window_title(app->window, "Hello,F World!");
-    window_origin(app->window, v2df(500, 200));
+    window_title(app->window, "CryptText");
+    window_origin(app->window, v2df(500, 250));
     window_OnClose(app->window, listener(app, i_OnClose, App));
     window_show(app->window);
     return app;
