@@ -1,0 +1,55 @@
+name: build_indows
+
+on:
+  push:
+    branches: ["main"]
+    tags:
+      - '*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write 
+  issues: read
+  packages: none
+
+jobs:
+  # Single deploy job since we're just deploying
+  build_linux_windows:
+    if: github.repository_owner == 'myridia'
+    runs-on: windows-latest
+    steps:
+      - name: download and build nappgui_rs
+        run: |
+          git clone --depth 1 https://github.com/frang75/nappgui_src.git
+          cd nappgui_src
+          cmake -S . -B build -DNAPPGUI_DEMO=NO
+          cmake --build build --config Release -j 4
+          cmake --install build --config Release --prefix C:/nappgui
+
+        
+      - name: checkout
+        uses: actions/checkout@v2
+        
+      - name: build crypttext
+        run: |
+         cmake -S . -B build -DCMAKE_INSTALL_PREFIX=C:/nappgui
+         cmake --build build --config Release 
+         ls build/Release/bin
+        
+
+      - name: Upload release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: 'build/Release/bin/crypttext.exe'
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true  
+        
+
+
+ 
+     
