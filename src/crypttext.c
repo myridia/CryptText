@@ -11,6 +11,7 @@ struct _app_t
     Window *window;
     TextView *text;
     uint32_t clicks;
+    Menu *menu;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -34,16 +35,30 @@ static Panel *i_panel(App *app)
 
     
     Label *label = label_create();
+    
     Button *button = button_push();
+    button_text(button, "Open");
+    
+    Button *button2 = button_push();
+    button_text(button2, "Save");
+    
     TextView *text = textview_create();
     textview_editable(text, TRUE);
     label_text(label, "m1m1");
-    button_text(button, "Open");
+
+
+    Menu *menu = menu_create();
+    MenuItem *item0 = menuitem_create();
+    menuitem_text(item0, "About");
+    menu_add_item(menu, item0);
+
+    
     button_OnClick(button, listener(app, i_OnButton, App));
 
     
     layout_label(layout1, label, 0, 0);
     layout_button(layout2, button, 0, 0);
+    layout_button(layout2, button2, 1, 0);    
     
     layout_hsize(layout, 0, 550);
     layout_vsize(layout, 2, 200);
