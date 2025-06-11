@@ -1,7 +1,8 @@
 /* NAppGUI Hello World */
 
 #include <nappgui.h>
-
+#include <stdlib.h>
+#include <stdio.h> 
 int32_t get_random(void);
 
 typedef struct _app_t App;
@@ -28,9 +29,26 @@ static void i_OnButton0(App *app, Event *e)
 {
     const char_t *type[] = { "txt", "ct" };
     const char_t *file = comwin_open_file(app->window, type, 2, NULL);
-    Stream *stm = stm_from_file(file,NULL);
-    printf("%s\n",file);
-    printf("%s\n",stm);    
+    printf("%s\n",file);    
+    /*Stream *stm = stm_from_file(file,NULL); */
+    FILE *fp = fopen(file, "r");
+    char *line_buf = NULL;
+    size_t line_buf_size = 0;
+    ssize_t line_size;
+    int line_count = 0;
+    line_size = getline(&line_buf, &line_buf_size, fp);
+
+while (line_size >= 0)
+  {
+    line_count++;
+    printf("line[%06d]: chars=%06zd, buf size=%06zu, contents: %s", line_count,line_size, line_buf_size, line_buf);
+    line_size = getline(&line_buf, &line_buf_size, fp);
+  }
+
+  free(line_buf);
+  line_buf = NULL;
+  fclose(fp);    
+    
 }
 
 
