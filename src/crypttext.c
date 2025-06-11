@@ -29,8 +29,17 @@ static void i_OnButton0(App *app, Event *e)
 {
     const char_t *type[] = { "txt", "ct" };
     const char_t *file = comwin_open_file(app->window, type, 2, NULL);
-    printf("%s\n",file);    
-    /*Stream *stm = stm_from_file(file,NULL); */
+    printf("%s\n",file);
+
+    
+    Stream *stm = stm_from_file(file,NULL);
+    String *s = dbind_read(stm, String);
+    printf("%s\n",s);    
+    stm_close(&stm);
+
+
+    
+    /*
     FILE *fp = fopen(file, "r");
     char *line_buf = NULL;
     size_t line_buf_size = 0;
@@ -48,7 +57,7 @@ while (line_size >= 0)
   free(line_buf);
   line_buf = NULL;
   fclose(fp);    
-    
+    */
 }
 
 
