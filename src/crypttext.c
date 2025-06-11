@@ -26,9 +26,11 @@ static void i_OnButton(App *app, Event *e)
 
 static void i_OnButton0(App *app, Event *e)
 {
-    const char_t *type[] = { "ct", "txt" };
+    const char_t *type[] = { "txt", "ct" };
     const char_t *file = comwin_open_file(app->window, type, 2, NULL);
+    Stream *stm = stm_from_file(file,NULL);
     printf("%s\n",file);
+    printf("%s\n",stm);    
 }
 
 
