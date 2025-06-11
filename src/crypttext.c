@@ -24,6 +24,14 @@ static void i_OnButton(App *app, Event *e)
     unref(e);
 }
 
+static void i_OnButton0(App *app, Event *e)
+{
+    const char_t *type[] = { "ct", "txt" };
+    const char_t *file = comwin_open_file(app->window, type, 2, NULL);
+    printf("%s\n",file);
+}
+
+
 /*---------------------------------------------------------------------------*/
 
 static Panel *i_panel(App *app)
@@ -52,10 +60,8 @@ static Panel *i_panel(App *app)
     textview_editable(text, TRUE); 
     label_text(label, "m1m1");
 
-
-
     
-    button_OnClick(button0, listener(app, i_OnButton, App));
+    button_OnClick(button0, listener(app, i_OnButton0, App));
 
     
     layout_label(layout1, label, 0, 0);
