@@ -32,33 +32,39 @@ static Panel *i_panel(App *app)
     Layout *layout = layout_create(1, 3);
     Layout *layout1 = layout_create(3, 1);        
     Layout *layout2 = layout_create(8, 1);
+    Label *label = label_create();
+    Button *button0 = button_push();
+    Button *button1 = button_push();
+    Button *button2 = button_push();
+    Button *button3 = button_push();
+    Button *button4 = button_push();
+    Button *button5 = button_push();                    
+    TextView *text = textview_create();
 
     
-    Label *label = label_create();
-    
-    Button *button = button_push();
-    button_text(button, "Open");
-    
-    Button *button2 = button_push();
-    button_text(button2, "Save");
-    
-    TextView *text = textview_create();
-    textview_editable(text, TRUE);
+    button_text(button0, "Open");
+    button_text(button1, "Save");
+    button_text(button2, "Cut");
+    button_text(button3, "Copy");
+    button_text(button4, "Paste");
+    button_text(button5, "Find");                
+
+    textview_editable(text, TRUE); 
     label_text(label, "m1m1");
 
 
-    Menu *menu = menu_create();
-    MenuItem *item0 = menuitem_create();
-    menuitem_text(item0, "About");
-    menu_add_item(menu, item0);
 
     
-    button_OnClick(button, listener(app, i_OnButton, App));
+    button_OnClick(button0, listener(app, i_OnButton, App));
 
     
     layout_label(layout1, label, 0, 0);
-    layout_button(layout2, button, 0, 0);
-    layout_button(layout2, button2, 1, 0);    
+    layout_button(layout2, button0, 0, 0);
+    layout_button(layout2, button1, 1, 0);
+    layout_button(layout2, button2, 2, 0);
+    layout_button(layout2, button3, 3, 0);
+    layout_button(layout2, button4, 4, 0);
+    layout_button(layout2, button5, 5, 0);        
     
     layout_hsize(layout, 0, 550);
     layout_vsize(layout, 2, 200);
