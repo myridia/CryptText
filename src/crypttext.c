@@ -179,24 +179,24 @@ static App *i_create(void)
     }    
     
     #if defined(__APPLE__)
-    Menu *submenu = menu_create();
-    MenuItem *item0 = menuitem_create();
-    MenuItem *item1 = menuitem_separator();
-    MenuItem *item2 = menuitem_create();
-    MenuItem *item3 = menuitem_separator();
-    MenuItem *item4 = menuitem_create();
-    menuitem_text(item0, "About Products");
-    menuitem_text(item2, "Settings...");
-    menuitem_text(item4, "Quit Products");
-    menu_add_item(submenu, item0);
-    menu_add_item(submenu, item1);
-    menu_add_item(submenu, item2);
-    menu_add_item(submenu, item3);
-    menu_add_item(submenu, item4);
-    MenuItem *xitem = menuitem_create();
-    menuitem_text(item, "");
-    menuitem_submenu(xitem, &submenu);
-    menu_ins_item(menu, 0, xitem);
+      Menu *submenu = menu_create();
+      MenuItem *item0 = menuitem_create();
+      MenuItem *item1 = menuitem_separator();
+      MenuItem *item2 = menuitem_create();
+      MenuItem *item3 = menuitem_separator();
+      MenuItem *item4 = menuitem_create();
+      menuitem_text(item0, "About Products");
+      menuitem_text(item2, "Settings...");
+      menuitem_text(item4, "Quit Products");
+      menu_add_item(submenu, item0);
+      menu_add_item(submenu, item1);
+      menu_add_item(submenu, item2);
+      menu_add_item(submenu, item3);
+      menu_add_item(submenu, item4);
+      MenuItem *xitem = menuitem_create();
+      menuitem_text(xitem, "");
+      menuitem_submenu(xitem, &submenu);
+      menu_ins_item(menu, 0, xitem);
     #endif
 
     
