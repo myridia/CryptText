@@ -15,16 +15,16 @@ struct _app_t
     Menu *menu;
 };
 
+
+
+
 /*---------------------------------------------------------------------------*/
-
-
 
 static void i_OnButton0(App *app, Event *e)
 {
     /* printf("%s\n",s);
-
-     */
-    const char_t *type[] = { "txt", "ct" };
+    */
+        const char_t *type[] = { "txt", "ct" };
     const char_t *file = comwin_open_file(app->window, type, 2, NULL);
     Stream *stm = stm_from_file(file,NULL);
     if (stm != NULL) {
@@ -40,11 +40,11 @@ static void i_OnButton0(App *app, Event *e)
    */
 static void i_OnButton1(App *app, Event *e)
 {
-
-    const char_t *type[] = { "txt" };
+         const char_t *type[] = { "txt" };
     const char_t *path = comwin_save_file(app->window, type, 1, NULL);
     printf("%s\n",path);
     FILE *file = fopen(path, "w");
+    
     if (!file) 
     {
         perror(path);
