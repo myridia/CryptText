@@ -2,7 +2,8 @@
 
 #include <nappgui.h>
 #include <stdlib.h>
-#include <stdio.h> 
+#include <stdio.h>
+
 int32_t get_random(void);
 
 typedef struct _app_t App;
@@ -16,6 +17,17 @@ struct _app_t
 };
 
 
+static Menu *i_menu(App *app)
+{
+  Menu *menu = menu_create();
+  #if defined(__APPLE__)
+  #endif
+
+   MenuItem *item = menuitem_create();
+   menuitem_text(item, "File");
+   menu_add_item(menu, item);
+  return menu;
+}
 
 
 /*---------------------------------------------------------------------------*/
@@ -24,7 +36,7 @@ static void i_OnButton0(App *app, Event *e)
 {
     /* printf("%s\n",s);
     */
-        const char_t *type[] = { "txt", "ct" };
+    const char_t *type[] = { "txt", "ct" };
     const char_t *file = comwin_open_file(app->window, type, 2, NULL);
     Stream *stm = stm_from_file(file,NULL);
     if (stm != NULL) {
@@ -40,17 +52,21 @@ static void i_OnButton0(App *app, Event *e)
    */
 static void i_OnButton1(App *app, Event *e)
 {
-         const char_t *type[] = { "txt" };
+    const char_t *type[] = { "txt" };
     const char_t *path = comwin_save_file(app->window, type, 1, NULL);
-    printf("%s\n",path);
     FILE *file = fopen(path, "w");
+    String *s = textview_get_text(app->text);
+
+    /* printf("%s\n",s); */
     
     if (!file) 
     {
         perror(path);
         return EXIT_FAILURE;
     }
-    if (fputs("Output in file.\n", file) == EOF)
+
+    
+    if (fputs(s, file) == EOF)
     {
         perror(path);
         e = EXIT_FAILURE;
@@ -61,15 +77,7 @@ static void i_OnButton1(App *app, Event *e)
         return EXIT_FAILURE;
     }
     
-    /*
-    if (file != NULL)
-    {
-      String *s = "h";
-      ferror_t error;
 
-      hfile_from_string("zzzzzzz.txt",s,&error);
-    }
-    */
     unref(e);
 }
 
@@ -144,11 +152,70 @@ static App *i_create(void)
 {
     App *app = heap_new0(App);
     Panel *panel = i_panel(app);
+    /*  app->menu = i_menu(app);     */
     app->window = window_create(ekWINDOW_STD);
+
     window_panel(app->window, panel);
     window_title(app->window, "CryptText");
     window_origin(app->window, v2df(500, 250));
     window_OnClose(app->window, listener(app, i_OnClose, App));
+
+
+    Menu *menu = menu_create();
+    {
+    MenuItem *item1 = menuitem_create();
+    menuitem_text(item1, "File");
+
+    Menu *submenu = menu_create();
+    MenuItem *s_item0 = menuitem_create();
+    MenuItem *s_item1 = menuitem_create();
+    MenuItem *s_item2 = menuitem_create();
+    menuitem_text(s_item0, "New");
+    menuitem_text(s_item1, "Open");
+    menuitem_text(s_item2, "Exit");
+    menu_add_item(submenu, s_item0);
+    menu_add_item(submenu, s_item1);
+    menu_add_item(submenu, s_item2);
+    menuitem_submenu(item1, &submenu);
+    menu_add_item(menu, item1);
+    }
+    {
+    MenuItem *item2 = menuitem_create();      
+    menuitem_text(item2, "Edit");
+    menu_add_item(menu, item2);
+    }
+    {
+    MenuItem *item3 = menuitem_create();      
+    menuitem_text(item3, "Help");
+    menu_add_item(menu, item3);
+    }    
+    
+    #if defined(__APPLE__)
+    Menu *submenu = menu_create();
+    MenuItem *item0 = menuitem_create();
+    MenuItem *item1 = menuitem_separator();
+    MenuItem *item2 = menuitem_create();
+    MenuItem *item3 = menuitem_separator();
+    MenuItem *item4 = menuitem_create();
+    menuitem_text(item0, "About Products");
+    menuitem_text(item2, "Settings...");
+    menuitem_text(item4, "Quit Products");
+    menu_add_item(submenu, item0);
+    menu_add_item(submenu, item1);
+    menu_add_item(submenu, item2);
+    menu_add_item(submenu, item3);
+    menu_add_item(submenu, item4);
+    
+    #endif
+
+    
+    
+
+
+    osapp_menubar(menu, app->window);
+
+   
+    
     window_show(app->window);
     return app;
 }
