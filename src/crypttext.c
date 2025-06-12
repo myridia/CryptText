@@ -17,18 +17,6 @@ struct _app_t
 };
 
 
-static Menu *i_menu(App *app)
-{
-  Menu *menu = menu_create();
-  #if defined(__APPLE__)
-  #endif
-
-   MenuItem *item = menuitem_create();
-   menuitem_text(item, "File");
-   menu_add_item(menu, item);
-  return menu;
-}
-
 
 /*---------------------------------------------------------------------------*/
 
@@ -205,7 +193,10 @@ static App *i_create(void)
     menu_add_item(submenu, item2);
     menu_add_item(submenu, item3);
     menu_add_item(submenu, item4);
-    
+    MenuItem *xitem = menuitem_create();
+    menuitem_text(item, "");
+    menuitem_submenu(xitem, &submenu);
+    menu_ins_item(menu, 0, xitem);
     #endif
 
     
