@@ -17,49 +17,61 @@ struct _app_t
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnButton(App *app, Event *e)
-{
-    int32_t res = get_random();
-    textview_printf(app->text, "Random: %i \n", res);
-    app->clicks += 1;
-    unref(e);
-}
+
 
 static void i_OnButton0(App *app, Event *e)
 {
+    /* printf("%s\n",s);
+
+     */
     const char_t *type[] = { "txt", "ct" };
     const char_t *file = comwin_open_file(app->window, type, 2, NULL);
-    printf("%s\n",file);
-
-    
     Stream *stm = stm_from_file(file,NULL);
+    if (stm != NULL) {
     String *s = dbind_read(stm, String);
-    printf("%s\n",s);    
+    textview_printf(app->text,"%s", s);    
     stm_close(&stm);
-
-
-    
-    /*
-    FILE *fp = fopen(file, "r");
-    char *line_buf = NULL;
-    size_t line_buf_size = 0;
-    ssize_t line_size;
-    int line_count = 0;
-    line_size = getline(&line_buf, &line_buf_size, fp);
-
-while (line_size >= 0)
-  {
-    line_count++;
-    printf("line[%06d]: chars=%06zd, buf size=%06zu, contents: %s", line_count,line_size, line_buf_size, line_buf);
-    line_size = getline(&line_buf, &line_buf_size, fp);
-  }
-
-  free(line_buf);
-  line_buf = NULL;
-  fclose(fp);    
-    */
+    }
+    unref(e);
 }
 
+  /*
+    https://devtut.github.io/c/files-and-i-o-streams.html#open-and-write-to-file
+   */
+static void i_OnButton1(App *app, Event *e)
+{
+
+    const char_t *type[] = { "txt" };
+    const char_t *path = comwin_save_file(app->window, type, 1, NULL);
+    printf("%s\n",path);
+    FILE *file = fopen(path, "w");
+    if (!file) 
+    {
+        perror(path);
+        return EXIT_FAILURE;
+    }
+    if (fputs("Output in file.\n", file) == EOF)
+    {
+        perror(path);
+        e = EXIT_FAILURE;
+    }
+    if (fclose(file)) 
+    {
+        perror(path);
+        return EXIT_FAILURE;
+    }
+    
+    /*
+    if (file != NULL)
+    {
+      String *s = "h";
+      ferror_t error;
+
+      hfile_from_string("zzzzzzz.txt",s,&error);
+    }
+    */
+    unref(e);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -91,6 +103,7 @@ static Panel *i_panel(App *app)
 
     
     button_OnClick(button0, listener(app, i_OnButton0, App));
+    button_OnClick(button1, listener(app, i_OnButton1, App));    
 
     
     layout_label(layout1, label, 0, 0);
