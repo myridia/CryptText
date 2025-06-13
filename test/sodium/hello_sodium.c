@@ -24,7 +24,7 @@ int main(void)
 
 
 
-unsigned char nonce[crypto_aead_aes256gcm_NPUBBYTES];
+
 unsigned char key[crypto_aead_aes256gcm_KEYBYTES];
 unsigned char ciphertext[MESSAGE_LEN + crypto_aead_aes256gcm_ABYTES];
 unsigned long long ciphertext_len;
