@@ -1,4 +1,4 @@
-.PHONY: windows
+.PHONY: watch
 
 windows:
 	x86_64-w64-mingw32-gcc hello_sodium.c -o hello_sodim_64.exe

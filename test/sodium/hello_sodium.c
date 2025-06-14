@@ -1,10 +1,7 @@
 #include <stdio.h>
 #include <sodium.h>
 
-#define MESSAGE ((const unsigned char *) "test")
-#define MESSAGE_LEN 4
 #define CIPHERTEXT_LEN (crypto_secretbox_MACBYTES + MESSAGE_LEN)
-
 
 void dump_hex_buff(unsigned char buf[], unsigned int len)
 {
@@ -30,6 +27,7 @@ int main(void)
     }
     puts("Sodium library successfully found");
     char *passwd = "password123";
+    char *msg = "hello";    
 
     unsigned char key[crypto_secretbox_KEYBYTES];
     unsigned char nonce[crypto_secretbox_NONCEBYTES];
@@ -39,9 +37,15 @@ int main(void)
     /* Generating a random key */
     crypto_secretbox_keygen(key);
     printf("secret key generated:\n");
-    printf("xxxxxxxxxxxxxxxxxxxxxx\n");    
-    dump_hex_buff(key, crypto_secretbox_KEYBYTES);
     printf("xxxxxxxxxxxxxxxxxxxxxx\n");
+    printf("msg: %s\n",msg);
+    const int msg_length = strlen(msg);
+    printf("msg length: %d\n",msg_length);    
+    printf("zzzzzzzzzzzzzzzzzzzzzzzz\n");    
+    dump_hex_buff(key, crypto_secretbox_KEYBYTES);
+
+
+    
 
     
     /* Using random bytes for a nonce buffer (a buffer used only once) */
@@ -51,8 +55,9 @@ int main(void)
 
     /* Encrypt MESSAGE using key and nonce
        Encrypted message is stored in ciphertext buffer */
-    crypto_secretbox_easy(ciphertext, MESSAGE, MESSAGE_LEN, nonce, key);
+    crypto_secretbox_easy(ciphertext, msg, msg_length, nonce, key);
     printf("ciphertext:\n");
+    
     dump_hex_buff(ciphertext, CIPHERTEXT_LEN);
 
 
