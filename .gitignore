@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-
+hello_sodium_linux 
 build
 dist
 
