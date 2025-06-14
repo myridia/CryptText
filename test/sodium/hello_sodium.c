@@ -25,25 +25,47 @@ int main(void)
       exit(1);
     }
     puts("Sodium library successfully found");
-    char *passwd = "password123";
+    char *password = "1234";
+    char *password2 = "1234";    
+    
     char *msg = "hello";    
     const int msg_length = strlen(msg);
     int ciphertext_len = crypto_secretbox_MACBYTES + msg_length;
     
-    unsigned char key[crypto_secretbox_KEYBYTES];
+    char key2[crypto_pwhash_STRBYTES];
     unsigned char nonce[crypto_secretbox_NONCEBYTES];
     unsigned char ciphertext[ciphertext_len];
     unsigned char decrypted[msg_length];
     
-    /* Generating a random key */
-    crypto_secretbox_keygen(key);
-    printf("secret key generated:\n");
-    printf("xxxxxxxxxxxxxxxxxxxxxx\n");
+
+    printf("aaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
     printf("msg: %s\n",msg);
-    
-    printf("msg length: %d\n",msg_length);    
+    printf("msg length: %d\n",msg_length);
+
+
+
+if (crypto_pwhash_str
+    (key2, password, strlen(password),
+     crypto_pwhash_OPSLIMIT_SENSITIVE, crypto_pwhash_MEMLIMIT_SENSITIVE) != 0) {
+    /* out of memory */
+}
+
+
+
+
+if (crypto_pwhash_str_verify
+    (key2, password2, strlen(password)) != 0) {
+    printf("wrong password\n");    
+}
+
+ 
+ 
+    printf("key2:\n"); 
+    dump_hex_buff(key2, crypto_secretbox_KEYBYTES);        
     printf("zzzzzzzzzzzzzzzzzzzzzzzz\n");    
-    dump_hex_buff(key, crypto_secretbox_KEYBYTES);
+
+
+
 
     
     /* Using random bytes for a nonce buffer (a buffer used only once) */
@@ -53,23 +75,19 @@ int main(void)
 
     /* Encrypt MESSAGE using key and nonce
        Encrypted message is stored in ciphertext buffer */
-    crypto_secretbox_easy(ciphertext, msg, msg_length, nonce, key);
+    crypto_secretbox_easy(ciphertext, msg, msg_length, nonce, key2);
     printf("ciphertext:\n");
-
-
-    
     dump_hex_buff(ciphertext, ciphertext_len); 
 
     /* Decrypt ciphertext buffer using key and nounce
        Decrypted message is stored in decrypted buffer */
-    if (crypto_secretbox_open_easy(decrypted, ciphertext, ciphertext_len, nonce, key) != 0) {
+    if (crypto_secretbox_open_easy(decrypted, ciphertext, ciphertext_len, nonce, key2) != 0) {
         /* message forged!, meaning decryption failed */
 
     } else {
         /* Successful decryption */
         printf("decrypted data (hex):\n");
         dump_hex_buff(decrypted, msg_length);
-	
         printf("decrpyted data (ascii):%s\n", decrypted);
     }
     return 0;
