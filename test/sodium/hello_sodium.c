@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <sodium.h>
 
-#define CIPHERTEXT_LEN (crypto_secretbox_MACBYTES + MESSAGE_LEN)
-
 void dump_hex_buff(unsigned char buf[], unsigned int len)
 {
     printf("\n");  
@@ -18,6 +16,7 @@ void dump_hex_buff(unsigned char buf[], unsigned int len)
   https://doc.libsodium.org/secret-key_cryptography/aead/aes-256-gcm#example-combined-mode
   https://franks42.gitbooks.io/libsodium-doc/content/secret-key_cryptography/aead.html
  */
+
 int main(void)
 {
     printf("Hello Sodium\n");
@@ -28,24 +27,25 @@ int main(void)
     puts("Sodium library successfully found");
     char *passwd = "password123";
     char *msg = "hello";    
-
+    const int msg_length = strlen(msg);
+    int ciphertext_len = crypto_secretbox_MACBYTES + msg_length;
+    
+    #define CIPHERTEXT_LEN (crypto_secretbox_MACBYTES + msg_length)
+    
     unsigned char key[crypto_secretbox_KEYBYTES];
     unsigned char nonce[crypto_secretbox_NONCEBYTES];
-    unsigned char ciphertext[CIPHERTEXT_LEN];
-    unsigned char decrypted[MESSAGE_LEN];
-
+    unsigned char ciphertext[ciphertext_len];
+    unsigned char decrypted[msg_length];
+    
     /* Generating a random key */
     crypto_secretbox_keygen(key);
     printf("secret key generated:\n");
     printf("xxxxxxxxxxxxxxxxxxxxxx\n");
     printf("msg: %s\n",msg);
-    const int msg_length = strlen(msg);
+    
     printf("msg length: %d\n",msg_length);    
     printf("zzzzzzzzzzzzzzzzzzzzzzzz\n");    
     dump_hex_buff(key, crypto_secretbox_KEYBYTES);
-
-
-    
 
     
     /* Using random bytes for a nonce buffer (a buffer used only once) */
@@ -60,17 +60,15 @@ int main(void)
     
     dump_hex_buff(ciphertext, CIPHERTEXT_LEN);
 
-
-
     /* Decrypt ciphertext buffer using key and nounce
        Decrypted message is stored in decrypted buffer */
-    if (crypto_secretbox_open_easy(decrypted, ciphertext, CIPHERTEXT_LEN, nonce, key) != 0) {
+    if (crypto_secretbox_open_easy(decrypted, ciphertext, ciphertext_len, nonce, key) != 0) {
         /* message forged!, meaning decryption failed */
 
     } else {
         /* Successful decryption */
         printf("decrypted data (hex):\n");
-        dump_hex_buff(decrypted, MESSAGE_LEN);
+        dump_hex_buff(decrypted, msg_length);
         printf("decrpyted data (ascii):%.4s\n", decrypted);
     }
     return 0;
