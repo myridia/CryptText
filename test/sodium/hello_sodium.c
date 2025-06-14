@@ -30,8 +30,6 @@ int main(void)
     const int msg_length = strlen(msg);
     int ciphertext_len = crypto_secretbox_MACBYTES + msg_length;
     
-    #define CIPHERTEXT_LEN (crypto_secretbox_MACBYTES + msg_length)
-    
     unsigned char key[crypto_secretbox_KEYBYTES];
     unsigned char nonce[crypto_secretbox_NONCEBYTES];
     unsigned char ciphertext[ciphertext_len];
@@ -57,8 +55,10 @@ int main(void)
        Encrypted message is stored in ciphertext buffer */
     crypto_secretbox_easy(ciphertext, msg, msg_length, nonce, key);
     printf("ciphertext:\n");
+
+
     
-    dump_hex_buff(ciphertext, CIPHERTEXT_LEN);
+    dump_hex_buff(ciphertext, ciphertext_len); 
 
     /* Decrypt ciphertext buffer using key and nounce
        Decrypted message is stored in decrypted buffer */
@@ -69,7 +69,8 @@ int main(void)
         /* Successful decryption */
         printf("decrypted data (hex):\n");
         dump_hex_buff(decrypted, msg_length);
-        printf("decrpyted data (ascii):%.4s\n", decrypted);
+	
+        printf("decrpyted data (ascii):%s\n", decrypted);
     }
     return 0;
     
