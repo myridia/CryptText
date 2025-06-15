@@ -43,16 +43,9 @@ if (crypto_aead_aes256gcm_is_available() == 0) {
 /***********************************************************/
 
 #define KEY_LEN crypto_box_SEEDBYTES
-
-unsigned char salt[crypto_pwhash_SALTBYTES];
-unsigned char key2[KEY_LEN];
-
-randombytes_buf(salt, sizeof salt);
-
-
  
 if (crypto_pwhash
-    (key, sizeof key, password, strlen(password), salt,
+    (key, sizeof key, password, strlen(password), key,
      crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE,
      crypto_pwhash_ALG_DEFAULT) != 0) {
     /* out of memory */
@@ -90,7 +83,6 @@ if (ciphertext_len < crypto_aead_aes256gcm_ABYTES ||
     puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         printf("key:");
         dump_hex_buff(key, crypto_secretbox_KEYBYTES);
-
 	
         printf("decrypted data (hex):");
         dump_hex_buff(decrypted, msg_len);
