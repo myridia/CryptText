@@ -11,7 +11,6 @@ void dump_hex_buff(unsigned char buf[], unsigned int len)
     printf("\n");
 }
 
-
 /*
   https://doc.libsodium.org/secret-key_cryptography/aead/aes-256-gcm#example-combined-mode
   https://franks42.gitbooks.io/libsodium-doc/content/secret-key_cryptography/aead.html
@@ -19,23 +18,21 @@ void dump_hex_buff(unsigned char buf[], unsigned int len)
 
 int main(void)
 {
-    printf("Hello Sodium\n");
     if (sodium_init() < 0) {
       puts("Sodium library couldn't be initialized, it is not safe to use.");
       exit(1);
     }
     char *password = "1234";
     char *msg = "hello";    
-    const int msg_length = strlen(msg);
+    const int msg_len = strlen(msg);
 
-#define MESSAGE (const unsigned char *) "test"
-#define MESSAGE_LEN 4
+
 #define ADDITIONAL_DATA (const unsigned char *) "123456"
 #define ADDITIONAL_DATA_LEN 6
 
 unsigned char nonce[crypto_aead_aes256gcm_NPUBBYTES];
 unsigned char key[crypto_aead_aes256gcm_KEYBYTES];
-unsigned char ciphertext[MESSAGE_LEN + crypto_aead_aes256gcm_ABYTES];
+unsigned char ciphertext[msg_len + crypto_aead_aes256gcm_ABYTES];
 unsigned long long ciphertext_len;
 
 sodium_init();
@@ -43,24 +40,41 @@ if (crypto_aead_aes256gcm_is_available() == 0) {
     abort(); /* Not available on this CPU */
 }
 
-/*
-crypto_aead_aes256gcm_keygen(key);
-*/
+/***********************************************************/
 
-if (crypto_pwhash_str
-    (key, password, strlen(password),
-     crypto_pwhash_OPSLIMIT_SENSITIVE, crypto_pwhash_MEMLIMIT_SENSITIVE) != 0) {
+#define KEY_LEN crypto_box_SEEDBYTES
+
+unsigned char salt[crypto_pwhash_SALTBYTES];
+unsigned char key2[KEY_LEN];
+
+randombytes_buf(salt, sizeof salt);
+
+
+ 
+if (crypto_pwhash
+    (key, sizeof key, password, strlen(password), salt,
+     crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE,
+     crypto_pwhash_ALG_DEFAULT) != 0) {
     /* out of memory */
 }
+
+/***********************************************************/
+
+
+/* 
+crypto_aead_aes256gcm_keygen(key);
+*/
  
+
 randombytes_buf(nonce, sizeof nonce);
 
+
 crypto_aead_aes256gcm_encrypt(ciphertext, &ciphertext_len,
-                              MESSAGE, MESSAGE_LEN,
+                              msg, msg_len,
                               ADDITIONAL_DATA, ADDITIONAL_DATA_LEN,
                               NULL, nonce, key);
 
-unsigned char decrypted[MESSAGE_LEN];
+unsigned char decrypted[msg_len];
 unsigned long long decrypted_len;
 if (ciphertext_len < crypto_aead_aes256gcm_ABYTES ||
     crypto_aead_aes256gcm_decrypt(decrypted, &decrypted_len,
@@ -71,10 +85,18 @@ if (ciphertext_len < crypto_aead_aes256gcm_ABYTES ||
                                   nonce, key) != 0) {
     /* message forged! */
 }
-
+ 
     printf("...sodium library successfully found\n");
-    
+    puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        printf("key:");
+        dump_hex_buff(key, crypto_secretbox_KEYBYTES);
+
+	
+        printf("decrypted data (hex):");
+        dump_hex_buff(decrypted, msg_len);
+        printf("decrpyted data (ascii):%s\n", decrypted);	
+    puts("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");        
+     
     return 0;
-    
 }
 
