@@ -6,7 +6,7 @@
 
 
 
-char str2byte(void)
+char* str2byte(void)
 {
 const char* hexstring = "1DE7142993816A6A81A7D4A2089A11F5C0A150FBC8E7DC0978D58825CE550000";
 size_t length = strlen(hexstring);
@@ -109,9 +109,11 @@ unsigned long long decrypted_len;
         dump_hex_buff(decrypted, msg_len);
         printf("decrpyted data (ascii):%s\n", decrypted);
         puts("...string to bytes:");
-	*encrypted = str2byte();
-        dump_hex_buff(str2byte(), crypto_secretbox_KEYBYTES);
+	char *e = str2byte();
+	
 
+
+	
 	
     puts("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");        
      
