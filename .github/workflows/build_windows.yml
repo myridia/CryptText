@@ -1,10 +1,10 @@
 name: build_windows
 
 on:
-  push:
-    branches: ["main"]
-    tags:
-      - '*'
+  workflow_run:
+    workflows: ["build_linux"]
+    types:
+      - completed  
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
