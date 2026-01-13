@@ -18,7 +18,7 @@ permissions:
 jobs:
   # Single deploy job since we're just deploying
   build_linux_windows:
-    if: github.repository_owner == 'myridia'
+    if: github.repository_owner == 'myridiax'
     runs-on: windows-latest
     steps:
       - name: download and build nappgui_rs
