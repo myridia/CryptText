@@ -25,13 +25,13 @@ static void i_OnButton0(App *app, Event *e)
     /* printf("%s\n",s);
     */
     const char_t *type[] = { "txt", "ct" };
-    const char_t *file = comwin_open_file(app->window, type, 2, NULL);
-    Stream *stm = stm_from_file(file,NULL);
-    if (stm != NULL) {
-    String *s = dbind_read(stm, String);
-    textview_printf(app->text,"%s", s);    
-    stm_close(&stm);
-    }
+    //const char_t *file = comwin_open_file(app->window, type, 2, NULL);
+    //Stream *stm = stm_from_file(file,NULL);
+    //if (stm != NULL) {
+    //String *s = dbind_read(stm, String);
+    //textview_printf(app->text,"%s", s);    
+    //stm_close(&stm);
+    //}
     unref(e);
 }
 
@@ -40,30 +40,31 @@ static void i_OnButton0(App *app, Event *e)
    */
 static void i_OnButton1(App *app, Event *e)
 {
-    const char_t *type[] = { "txt" };
-    const char_t *path = comwin_save_file(app->window, type, 1, NULL);
-    FILE *file = fopen(path, "w");
-    String *s = textview_get_text(app->text);
+   const char_t *type[] = {"txt"};
+      
+  //const char_t *path = comwin_save_file(app->window, type, 1, NULL);
+   // FILE *file = fopen(path, "w");
+   // String *s = textview_get_text(app->text);
 
     /* printf("%s\n",s); */
     
-    if (!file) 
-    {
-        perror(path);
-        return EXIT_FAILURE;
-    }
+    //if (!file) 
+    //{
+   //   perror(path);
+   //    return EXIT_FAILURE;
+   //}
 
     
-    if (fputs(s, file) == EOF)
-    {
-        perror(path);
-        e = EXIT_FAILURE;
-    }
-    if (fclose(file)) 
-    {
-        perror(path);
-        return EXIT_FAILURE;
-    }
+   //if (fputs(s, file) == EOF)
+   //{
+   //    perror(path);
+   //    e = EXIT_FAILURE;
+   //}
+   //if (fclose(file)) 
+   //{
+   //    perror(path);
+   //    return EXIT_FAILURE;
+   //}
     
 
     unref(e);
