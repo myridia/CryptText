@@ -33,7 +33,7 @@ jobs:
 
        - name: build crypttext
          run: |
-           cmake -G Xcode -S . -B build -DCMAKE_INSTALL_PREFIX=/usr/local/nappgui
+           cmake -G Xcode -S . -B build -DCMAKE_INSTALL_PREFIX=/usr/local/nappgui -DCMAKE_POLICY_VERSION_MINIMUM=3.5 
            cmake --build build --config Release
            ls  build/Release/bin/
            ls build/Release/bin/crypttext.app
