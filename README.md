@@ -1,3 +1,4 @@
+<img src="CryptText.svg" alt="CryptText" width="120">
 # CryptText
 
 ## Requirements for Compile 
